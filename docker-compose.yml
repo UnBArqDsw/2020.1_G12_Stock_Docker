@@ -18,12 +18,17 @@ services:
       dockerfile: Dockerfile
     depends_on:
       - postgres
+      - redis
     command: yarn start
     ports:
       - "8000:8000"
+      - "4001:4001"
     volumes:
       - ../2020.1_G12_Stock_Backend:/app/
       - /app/node_modules
+    environment:
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
 
   web:
     stdin_open: true
@@ -36,3 +41,10 @@ services:
     volumes:
       - "/app/node_modules"
       - "../2020.1_G12_Stock_Frontend:/app"
+
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./redis.conf:/usr/local/etc/redis/redis.conf
